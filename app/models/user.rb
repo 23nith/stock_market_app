@@ -13,4 +13,8 @@ class User < ApplicationRecord
   def set_default_role
     self.role ||= :user
   end
+
+  validates :balance, presence: true
+  has_many :transactions
+  has_many :stocks, through: :transactions
 end

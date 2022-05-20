@@ -16,4 +16,11 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "articles#index"
+
+  get 'traders' => 'users#index'
+  
+  get 'traders/new' => 'users#new', as: 'admin_create_user'
+  post 'traders' => 'users#add_user', as: 'admin_add_user'
+
+  patch '/traders/:id' => 'users#approve_user', as: 'approve_user'
 end

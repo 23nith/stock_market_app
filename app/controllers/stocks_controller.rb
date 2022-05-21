@@ -1,11 +1,18 @@
 class StocksController < ApplicationController
   before_action :set_stock, only: %i[ show update destroy ]
+  before_action :authenticate_user!
 
   # GET /stocks
   def index
-    @stocks = Stock.all
+    # @stocks = Stock.all
 
-    render json: @stocks
+    # render json: @stocks
+  end
+
+  def top_ten
+    @top_ten = Stock.top_ten
+
+    render json: @top_ten
   end
 
   # GET /stocks/1

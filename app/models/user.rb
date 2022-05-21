@@ -17,4 +17,8 @@ class User < ApplicationRecord
   validates :balance, presence: true
   has_many :transactions
   has_many :stocks, through: :transactions
+
+  # def full_name
+  #   "#{first_name} #{last_name}"
+  # end
 end

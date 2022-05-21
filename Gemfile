@@ -51,3 +51,6 @@ end
 gem "devise", "~> 4.8"
 gem 'devise-jwt'
 gem 'fast_jsonapi'
+
+gem 'stock_quote', '~> 3.0'
+gem 'iex-ruby-client'

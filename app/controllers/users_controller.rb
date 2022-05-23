@@ -1,8 +1,14 @@
 class UsersController < ApplicationController
   def index
-    @users = User.order(params[:sort])
-
-    render json: @users
+    if current_user.role == "admin"
+      @users = User.order(params[:sort])
+      render json: @users
+    else
+      render json: {
+        status: {code: 200, message: 'You have no sufficient priviledges to access this route.'},
+      }
+    end
+    
   end
 
   def new

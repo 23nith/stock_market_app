@@ -15,8 +15,17 @@ class Stock < ApplicationRecord
     get_iex.stock_market_list(:mostactive)
   end
 
-  def hello
-    puts "hello #{ticker}"
+  # def hello
+  #   puts "hello #{ticker}"
+  # end
+
+  def self.latest_price(symbol)
+    get_iex.quote(symbol).latest_price
+  end
+  
+  def self.add_to_stocks(symbol)
+    Stock.create!(ticker: symbol)
   end
 
+  validates :ticker, presence: true, uniqueness: true
 end

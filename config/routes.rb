@@ -2,6 +2,9 @@ Rails.application.routes.draw do
   # get 'current_user/index'
   get '/current_user', to: 'current_user#index'
   resources :stocks
+  resources :transactions
+
+  get '/top_ten', to: 'stocks#top_ten'
 
   # devise_for :users
   devise_for :users, path: '', path_names: {

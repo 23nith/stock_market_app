@@ -4,6 +4,8 @@ class TransactionsController < ApplicationController
 
   # GET /transactions
   def index
+    puts "current user id is #{current_user.id}"
+    puts "current user role is #{current_user.role}"
     if current_user.role == "admin"
       @transactions = Transaction.all
     elsif current_user.role == "user"
@@ -25,7 +27,7 @@ class TransactionsController < ApplicationController
   # POST /transactions
   def create
     # @transaction = Transaction.new(transaction_params)
-    # check if symbol is already in the list of stocks
+    # CHECK IF SYMBOL IS ALREADY IN THE LIST OF STOCKS
     if Stock.find_by(ticker: transaction_params["symbol"]) == nil
       Stock.create!(ticker: transaction_params["symbol"])
     end
@@ -33,16 +35,18 @@ class TransactionsController < ApplicationController
     @stock_id = Stock.find_by(ticker: transaction_params["symbol"]).id
     @stock_price = Stock.latest_price(transaction_params["symbol"])
 
-    # TOTAL AMOUNT 
+    # TOTAL AMOUNT AND GAINS
     if transaction_params[:transaction_type] == "buy"
       @total_amount = transaction_params[:count] * @stock_price * -1
       @gains = 0;
     elsif transaction_params[:transaction_type] == "sell"
       @total_amount = transaction_params[:count] * @stock_price 
       # COMPUTE GAINS
-      @total_amount_spent = Transaction.where(user_id: 1).where(stock_id: @stock_id).sum(:total_amount).to_i
-      @total_stock_count = Transaction.where(user_id: 1).where(stock_id: @stock_id).sum(:count)
-      @ave_val_stock = @total_amount_spent / @total_stock_count
+      @total_amount_spent = Transaction.where(user_id: 1).where(stock_id: @stock_id).sum(:total_amount).to_f
+      @total_stock_count_bought = Transaction.where(user_id: 1).where(stock_id: @stock_id, transaction_type: "buy").sum(:count)
+      @total_stock_count_sold = Transaction.where(user_id: 1).where(stock_id: @stock_id, transaction_type: "sell").sum(:count)
+      @total_stock_count = @total_stock_count_bought - @total_stock_count_sold
+      @ave_val_stock = (@total_amount_spent * -1) / @total_stock_count
       @gains = (@stock_price - @ave_val_stock) * transaction_params[:count] 
     end
 

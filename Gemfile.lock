@@ -100,6 +100,11 @@ GEM
     dry-core (0.7.1)
       concurrent-ruby (~> 1.0)
     erubi (1.10.0)
+    factory_bot (6.2.1)
+      activesupport (>= 5.0.0)
+    factory_bot_rails (6.2.0)
+      factory_bot (~> 6.2.0)
+      railties (>= 5.0.0)
     faraday (1.10.0)
       faraday-em_http (~> 1.0)
       faraday-em_synchrony (~> 1.0)
@@ -281,6 +286,7 @@ DEPENDENCIES
   debug
   devise (~> 4.8)
   devise-jwt
+  factory_bot_rails
   fast_jsonapi
   iex-ruby-client
   pg (~> 1.1)

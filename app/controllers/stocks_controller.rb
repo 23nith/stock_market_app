@@ -5,8 +5,26 @@ class StocksController < ApplicationController
   # GET /stocks
   def index
     # @stocks = Stock.all
+    @stocks = User.find(current_user.id).stocks
+
+    @myarr = []
+
+    @stocks.each do |stock|
+      @total_amount_spent = Transaction.where(user_id: current_user.id).where(stock_id: stock.id).sum(:total_amount).to_f * -1
+
+      @total_stock_count_bought = Transaction.where(user_id: current_user.id).where(stock_id: stock.id, transaction_type: "buy").sum(:count)
+
+      @total_stock_count_sold = Transaction.where(user_id: current_user.id).where(stock_id: stock.id, transaction_type: "sell").sum(:count)
+
+      @total_stock_count = @total_stock_count_bought - @total_stock_count_sold
+
+      @myarr.push({:ticker => stock.ticker, :latest_price => Stock.get_iex.quote(stock.ticker).latest_price, :investment_value => @total_amount_spent, :shares_owned => @total_stock_count})
+    end
+
+    puts "#{@myarr}"
 
     # render json: @stocks
+    render json: @myarr
   end
 
   def top_ten

@@ -4,15 +4,18 @@ class TransactionsController < ApplicationController
 
   # GET /transactions
   def index
-    puts "current user id is #{current_user.id}"
-    puts "current user role is #{current_user.role}"
     if current_user.role == "admin"
       @transactions = Transaction.all
     elsif current_user.role == "user"
       @transactions = Transaction.where(user_id: current_user.id)
+      @myarr = []
+      @transactions.each do |transaction|
+        @myarr.push({:id => transaction.id, :user_id => transaction.user_id, :count => transaction.count, :transaction_type => transaction.transaction_type, :share_price => transaction.share_price, :total_amount => transaction.total_amount, :gains => transaction.gains, :created_at => transaction.created_at, :stock_id => transaction.stock_id, :ticker => Stock.find(transaction.stock_id).ticker})
+      end
     end
 
-    render json: @transactions
+    # render json: @transactions
+    render json: @myarr
   end
 
   def buy

@@ -6,16 +6,16 @@ class TransactionsController < ApplicationController
   def index
     if current_user.role == "admin"
       @transactions = Transaction.all
+      # render json: @transactions
     elsif current_user.role == "user"
       @transactions = Transaction.where(user_id: current_user.id)
-      @myarr = []
-      @transactions.each do |transaction|
-        @myarr.push({:id => transaction.id, :user_id => transaction.user_id, :count => transaction.count, :transaction_type => transaction.transaction_type, :share_price => transaction.share_price, :total_amount => transaction.total_amount, :gains => transaction.gains, :created_at => transaction.created_at, :stock_id => transaction.stock_id, :ticker => Stock.find(transaction.stock_id).ticker})
-      end
     end
-
-    # render json: @transactions
+    @myarr = []
+    @transactions.each do |transaction|
+      @myarr.push({:id => transaction.id, :user_id => transaction.user_id, :count => transaction.count, :transaction_type => transaction.transaction_type, :share_price => transaction.share_price, :total_amount => transaction.total_amount, :gains => transaction.gains, :created_at => transaction.created_at, :stock_id => transaction.stock_id, :ticker => Stock.find(transaction.stock_id).ticker})
+    end
     render json: @myarr
+
   end
 
   def buy
@@ -58,6 +58,7 @@ class TransactionsController < ApplicationController
     @transaction = Transaction.new({
       user_id: current_user.id, 
       stock_id: @stock_id, 
+      ticker: Stock.find(@stock_id).ticker,
       share_price: @stock_price,
       count: transaction_params["count"],
       gains: @gains,
@@ -95,6 +96,6 @@ class TransactionsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def transaction_params
-      params.require(:transaction).permit(:user_id, :symbol, :count, :transaction_type)
+      params.require(:transaction).permit(:user_id, :symbol, :count, :transaction_type, :ticker)
     end
 end

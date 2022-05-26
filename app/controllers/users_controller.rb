@@ -5,7 +5,7 @@ class UsersController < ApplicationController
       render json: @users
     else
       render json: {
-        status: {code: 200, message: 'You have no sufficient priviledges to access this route.'},
+        status: {code: 401, message: 'You have no sufficient priviledges to access this route.'},
       }
     end
     

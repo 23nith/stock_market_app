@@ -10,7 +10,7 @@ class StocksController < ApplicationController
     @myarr = []
 
     @stocks.each do |stock|
-      @total_amount_spent = Transaction.where(user_id: current_user.id).where(stock_id: stock.id).sum(:total_amount).to_f * -1
+      @total_amount_spent = Transaction.where(user_id: current_user.id).where(stock_id: stock.id).sum(:total_amount).to_f
 
       @total_stock_count_bought = Transaction.where(user_id: current_user.id).where(stock_id: stock.id, transaction_type: "buy").sum(:count)
 
@@ -24,7 +24,7 @@ class StocksController < ApplicationController
     puts "#{@myarr}"
 
     # render json: @stocks
-    render json: @myarr
+    render json: @myarr.uniq
   end
 
   def top_ten

@@ -15,6 +15,8 @@ class User < ApplicationRecord
   end
 
   validates :balance, presence: true
+  validates :first_name, presence: true
+  validates :last_name, presence: true
   has_many :transactions
   has_many :stocks, through: :transactions
 

@@ -23,7 +23,7 @@ RSpec.describe 'TransactionsController', type: :request do
       change(Transaction, :count)
       .by(1)
 
-      # expect(response).to have_http_status(201)
+      expect(response).to have_http_status(201)
       count = JSON.parse(response.body)['count']
       expect(count).to eq(2)
     end

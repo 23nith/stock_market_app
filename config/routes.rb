@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   resources :transactions
 
   get '/top_ten', to: 'stocks#top_ten'
+  post '/stock_info', to: 'stocks#stock_info'
 
   # devise_for :users
   devise_for :users, path: '', path_names: {
@@ -20,11 +21,11 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "articles#index"
-
-  get 'traders' => 'users#index'
+  post '/approve_user' => 'transactions#approve_user', as: 'approve_user'
+  get '/traders' => 'users#index'
   
-  get 'traders/new' => 'users#new', as: 'admin_create_user'
-  post 'traders' => 'users#add_user', as: 'admin_add_user'
+  get '/traders/new' => 'users#new', as: 'admin_create_user'
+  post '/traders' => 'users#add_user', as: 'admin_add_user'
 
-  patch '/traders/:id' => 'users#approve_user', as: 'approve_user'
+  
 end

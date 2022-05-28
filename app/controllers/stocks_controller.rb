@@ -8,17 +8,18 @@ class StocksController < ApplicationController
     @stocks = User.find(current_user.id).stocks
 
     @myarr = []
+    @transactions = Transaction.where(user_id: current_user.id)
 
     @stocks.each do |stock|
-      @total_amount_spent = Transaction.where(user_id: current_user.id).where(stock_id: stock.id).sum(:total_amount).to_f
+      @total_amount_spent = @transactions.where(stock_id: stock.id).sum(:total_amount).to_f
 
-      @total_stock_count_bought = Transaction.where(user_id: current_user.id).where(stock_id: stock.id, transaction_type: "buy").sum(:count)
+      @total_stock_count_bought = @transactions.where(stock_id: stock.id, transaction_type: "buy").sum(:count)
 
-      @total_stock_count_sold = Transaction.where(user_id: current_user.id).where(stock_id: stock.id, transaction_type: "sell").sum(:count)
+      @total_stock_count_sold = @transactions.where(stock_id: stock.id, transaction_type: "sell").sum(:count)
 
       @total_stock_count = @total_stock_count_bought - @total_stock_count_sold
-
-      @myarr.push({:ticker => stock.ticker, :latest_price => Stock.get_iex.quote(stock.ticker).latest_price, :investment_value => @total_amount_spent, :shares_owned => @total_stock_count})
+      # :latest_price => Stock.get_iex.quote(stock.ticker).latest_price
+      @myarr.push({:ticker => stock.ticker, :investment_value => @total_amount_spent, :shares_owned => @total_stock_count})
     end
 
     puts "#{@myarr}"
@@ -27,10 +28,17 @@ class StocksController < ApplicationController
     render json: @myarr.uniq
   end
 
+  # GET /top_ten
   def top_ten
     @top_ten = Stock.top_ten
 
     render json: @top_ten
+  end
+
+  # GET /stock_info
+  def stock_info
+    @stock_info = Stock.get_iex.quote(stock_params["ticker"])
+    render json: @stock_info
   end
 
   # GET /stocks/1

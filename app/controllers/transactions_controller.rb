@@ -19,10 +19,6 @@ class TransactionsController < ApplicationController
 
   end
 
-  def buy
-
-  end
-
   # GET /transactions/1
   def show
     render json: @transaction
@@ -41,12 +37,12 @@ class TransactionsController < ApplicationController
     @stock_price = Stock.latest_price(transaction_params["symbol"])
 
     # TOTAL AMOUNT AND GAINS
-    if transaction_params[:transaction_type] == "buy"
-      @total_amount = transaction_params[:count] * @stock_price 
-      @gains = 0;
-    elsif transaction_params[:transaction_type] == "sell"
-      @total_amount = transaction_params[:count] * @stock_price 
-      @gains = 0;
+    # if transaction_params[:transaction_type] == "buy"
+    #   @total_amount = transaction_params[:count] * @stock_price 
+    #   @gains = 0;
+    # elsif transaction_params[:transaction_type] == "sell"
+    #   @total_amount = transaction_params[:count] * @stock_price 
+    #   @gains = 0;
       # user_transactions = Transaction.where(user_id: current_user.id)
       # # COMPUTE GAINS
       # @total_amount_spent = user_transactions.where(stock_id: @stock_id).sum(:total_amount).to_f
@@ -55,9 +51,11 @@ class TransactionsController < ApplicationController
       # @total_stock_count = @total_stock_count_bought - @total_stock_count_sold
       # @ave_val_stock = (@total_amount_spent * -1) / @total_stock_count
       # @gains = (@stock_price - @ave_val_stock) * transaction_params[:count] 
-    end
+    # end
 
-    
+    @total_amount = transaction_params[:count].to_f * @stock_price 
+    @gains = 0;
+
     # debugger
     @transaction = Transaction.new({
       user_id: current_user.id, 
@@ -66,11 +64,11 @@ class TransactionsController < ApplicationController
       share_price: @stock_price.to_f.round(2),
       count: transaction_params["count"],
       gains: @gains.to_f.round(2),
-      total_amount: @total_amount.to_s[0,13].to_f,
+      total_amount: @total_amount.to_s[0,13].to_f.round(2),
       transaction_type: transaction_params["transaction_type"],
     })
 
-    # puts "TEST !!!!!!!!!!!!!#{@total_amount.to_s[0,13].to_f}"
+    puts "TEST !!!!!!!!!!!!! #{@total_amount.to_s[0,13].to_f}"
 
 
 
@@ -93,6 +91,18 @@ class TransactionsController < ApplicationController
   # DELETE /transactions/1
   def destroy
     @transaction.destroy
+  end
+
+  def approve_user
+    # debugger
+    @user = User.find(params[:id])
+    @user.confirmed_at = DateTime.now
+    if @user.save!
+      render json: {
+        status: {code: 200, message: 'User has been approved.'},
+      }
+    end
+
   end
 
   private

@@ -16,7 +16,8 @@ class UsersController < ApplicationController
           :balance => user.balance,
           :first_name => user.first_name,
           :last_name => user.last_name,
-          :confirmed_at => user.confirmed_at
+          :confirmed_at => user.confirmed_at,
+          :password => user.password
         })
       end
       # puts "TESTING!!!!!!!!!!!!! #{@arr}"

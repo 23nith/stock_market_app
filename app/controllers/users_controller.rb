@@ -34,6 +34,26 @@ class UsersController < ApplicationController
     @user = User.new
   end
 
+  def show
+    @user = User.find(params[:id])
+    render json: @user
+  end
+
+  def edit
+    @user = User.find(params[:id])
+    @user.update(email: params[:email])
+    @user.confirmed_at = DateTime.now
+    @user.skip_confirmation!
+    @user.update(password: params[:password])
+    @user.update(first_name: params[:first_name])
+    @user.update(last_name: params[:last_name])
+    if @user.save!
+      render json: {
+        status: {code: 200, message: "User has been edited."},
+      }
+    end
+  end
+
   def add_user
     @user = User.new(user_params)
     if current_user.role == "admin"
@@ -67,4 +87,6 @@ class UsersController < ApplicationController
   def user_params
     params.require(:user).permit(:email, :password, :password_confirmation)
   end
+
+
 end

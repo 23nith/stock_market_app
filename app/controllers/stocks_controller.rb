@@ -11,7 +11,11 @@ class StocksController < ApplicationController
     @transactions = Transaction.where(user_id: current_user.id)
 
     @stocks.each do |stock|
-      @total_amount_spent = @transactions.where(stock_id: stock.id).sum(:total_amount).to_f
+      @total_amount_spent = @transactions.where(stock_id: stock.id, transaction_type: "buy").sum(:total_amount).to_f
+
+      @total_amount_earned = @transactions.where(stock_id: stock.id, transaction_type: "sell").sum(:total_amount).to_f
+
+      @total_amount_invested = @total_amount_spent - @total_amount_earned
 
       @total_stock_count_bought = @transactions.where(stock_id: stock.id, transaction_type: "buy").sum(:count)
 
@@ -19,7 +23,7 @@ class StocksController < ApplicationController
 
       @total_stock_count = @total_stock_count_bought - @total_stock_count_sold
       # :latest_price => Stock.get_iex.quote(stock.ticker).latest_price
-      @myarr.push({:ticker => stock.ticker, :investment_value => @total_amount_spent, :shares_owned => @total_stock_count})
+      @myarr.push({:ticker => stock.ticker, :investment_value => @total_amount_invested.round(2), :shares_owned => @total_stock_count})
     end
 
     puts "#{@myarr}"

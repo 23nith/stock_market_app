@@ -37,24 +37,30 @@ class TransactionsController < ApplicationController
     @stock_price = Stock.latest_price(transaction_params["symbol"])
 
     # TOTAL AMOUNT AND GAINS
-    # if transaction_params[:transaction_type] == "buy"
-    #   @total_amount = transaction_params[:count] * @stock_price 
-    #   @gains = 0;
-    # elsif transaction_params[:transaction_type] == "sell"
-    #   @total_amount = transaction_params[:count] * @stock_price 
-    #   @gains = 0;
-      # user_transactions = Transaction.where(user_id: current_user.id)
-      # # COMPUTE GAINS
-      # @total_amount_spent = user_transactions.where(stock_id: @stock_id).sum(:total_amount).to_f
-      # @total_stock_count_bought = user_transactions.where(stock_id: @stock_id, transaction_type: "buy").sum(:count)
-      # @total_stock_count_sold = user_transactions.where(stock_id: @stock_id, transaction_type: "sell").sum(:count)
-      # @total_stock_count = @total_stock_count_bought - @total_stock_count_sold
-      # @ave_val_stock = (@total_amount_spent * -1) / @total_stock_count
-      # @gains = (@stock_price - @ave_val_stock) * transaction_params[:count] 
-    # end
+    if transaction_params[:transaction_type] == "buy"
+      @total_amount = transaction_params[:count].to_f * @stock_price 
+      User.find(current_user.id)
+      @gains = 0;
+    elsif transaction_params[:transaction_type] == "sell"
+      @total_amount = transaction_params[:count].to_f * @stock_price 
+      # @gains = 0;
+      user_transactions = Transaction.where(user_id: current_user.id)
+      # COMPUTE GAINS
+      @total_amount_earned = User.find(current_user.id).transactions.where(stock_id: @stock_id, transaction_type: "sell").sum(:total_amount)
+      @total_amount_spent = User.find(current_user.id).transactions.where(stock_id: @stock_id, transaction_type: "buy").sum(:total_amount)
+      # @total_amount_spent = Transaction.where(user_id: current_user.id).where(stock_id: @stock_id).sum(:total_amount).to_f
+      @total_amount_to_be_divided = @total_amount_spent - @total_amount_earned
+      @total_stock_count_bought = Transaction.where(user_id: current_user.id).where(stock_id: @stock_id, transaction_type: "buy").sum(:count)
+      @total_stock_count_sold = Transaction.where(user_id: current_user.id).where(stock_id: @stock_id, transaction_type: "sell").sum(:count)
+      @total_stock_count = @total_stock_count_bought - @total_stock_count_sold
+      @ave_val_stock = (@total_amount_to_be_divided) / @total_stock_count
+      @gains = (@stock_price - @ave_val_stock) * transaction_params[:count] 
+      
+    end
+
 
     @total_amount = transaction_params[:count].to_f * @stock_price 
-    @gains = 0;
+    # @gains = 0;
 
     # debugger
     @transaction = Transaction.new({
@@ -68,10 +74,7 @@ class TransactionsController < ApplicationController
       transaction_type: transaction_params["transaction_type"],
     })
 
-    puts "TEST !!!!!!!!!!!!! #{@total_amount.to_s[0,13].to_f}"
-
-
-
+    # puts "TEST !!!!!!!!!!!!! #{@total_amount.to_s[0,13].to_f}"
     if @transaction.save
       render json: @transaction, status: :created, location: @transaction
     else

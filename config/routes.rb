@@ -27,5 +27,8 @@ Rails.application.routes.draw do
   get '/traders/new' => 'users#new', as: 'admin_create_user'
   post '/traders' => 'users#add_user', as: 'admin_add_user'
 
+  post '/trader' => 'users#show', as: 'admin_show_user'
+
+  post '/edit_trader' => 'users#edit', as: 'admin_edit_user'
   
 end

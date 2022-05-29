@@ -101,6 +101,7 @@ class TransactionsController < ApplicationController
     @user = User.find(params[:id])
     @user.confirmed_at = DateTime.now
     if @user.save!
+      UserMailer.with(user: @user).user_approved.deliver_later
       render json: {
         status: {code: 200, message: 'User has been approved.'},
       }

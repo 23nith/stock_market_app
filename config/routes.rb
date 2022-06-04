@@ -22,6 +22,7 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "articles#index"
   post '/approve_user' => 'transactions#approve_user', as: 'approve_user'
+  post '/add_user' => 'transactions#add_user', as: 'add_user'
   get '/traders' => 'users#index'
   
   get '/traders/new' => 'users#new', as: 'admin_create_user'

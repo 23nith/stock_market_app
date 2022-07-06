@@ -41,11 +41,11 @@
     <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a>
     <br />
     <br /> -->
-    <a href="https://github.com/othneildrew/Best-README-Template">View Demo</a>
+    <a href="https://23nith.github.io/stock_trading_app_fe/#/">View Demo</a>
     ·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues">Report Bug</a>
+    <a href="https://github.com/23nith/stock_market_app/issues">Report Bug</a>
     ·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues">Request Feature</a>
+    <a href="https://github.com/23nith/stock_market_app/issues">Request Feature</a>
   </p>
 </div>
 
@@ -176,7 +176,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_ --
     - [ ] Chinese
     - [ ] Spanish
 
-See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/23nith/stock_market_app/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
